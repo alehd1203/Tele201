@@ -1,0 +1,26 @@
+ #!/bin/bash
+        # These settings are from the Snowmix ini file for the feed.
+        CONTROL_PIPE=/tmp/feed1-control-pipe
+        width=704
+        height=576
+        framerate='25/1'
+        gstlaunch=gst-launch-1.0
+        SHMSIZE='shm-size='`echo "$width * $height * 4 * 22"|bc`
+        MIXERFORMAT='video/x-raw, format=BGRA, pixel-aspect-ratio=1/1, interlace-mode=progressive'
+        SCALENRATE='videoconvert ! videorate ! videoscale ! videoconvert'
+        CAPS="application/x-rtp,media=video,clock-rate=90000,encoding-name=H264,payload=96"
+        SRC=" udpsrc port=10000 caps=$CAPS ! rtph264depay ! h264parse ! avdec_h264"
+        SHMOPTION="wait-for-connection=0 sync=true "
+        SHMSINK1="shmsink socket-path=$CONTROL_PIPE $SHMSIZE $SHMOPTION"
+        
+	while true ; do
+            # Remove the named pipe if it exist
+            rm -f $CONTROL_PIPE
+            $gstlaunch -v           \
+                $SRC               !\
+                $SCALENRATE        !\
+                "$MIXERFORMAT,framerate=$framerate,width=$width,height=$height" !\
+                $SHMSINK1
+            sleep 2
+        done
+        exit
