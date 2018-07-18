@@ -60,7 +60,7 @@ while true ; do
     	$VIDEOCONVERT				! \
     	theoraenc 		    		! \
         oggmux 		    			! \
-        shout2send ip=127.0.0.1 port=10003 mount=/tele.ogg username=source
+        shout2send ip=127.0.0.1 port=10005 mount=/tele.ogg username=source
   sleep 2
 done
 exit 0

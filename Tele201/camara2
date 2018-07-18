@@ -21,6 +21,5 @@
                 $SCALENRATE        !\
                 "$MIXERFORMAT,framerate=$framerate,width=$width,height=$height" !\
                 $SHMSINK1
-            sleep 2
         done
         exit

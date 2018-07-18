@@ -10,7 +10,7 @@
         SCALENRATE='videoconvert ! videorate ! videoscale ! videoconvert'
         CAPS="application/x-rtp,media=video,clock-rate=90000,encoding-name=H264,payload=96"
         SRC=" udpsrc port=10000 caps=$CAPS ! rtph264depay ! h264parse ! avdec_h264"
-        SHMOPTION="wait-for-connection=0 sync=true "
+        SHMOPTION="sync=true "
         SHMSINK1="shmsink socket-path=$CONTROL_PIPE $SHMSIZE $SHMOPTION"
         
 	while true ; do
@@ -21,6 +21,8 @@
                 $SCALENRATE        !\
                 "$MIXERFORMAT,framerate=$framerate,width=$width,height=$height" !\
                 $SHMSINK1
-            sleep 2
         done
         exit
+
+
+	#wait-for-connection=0
